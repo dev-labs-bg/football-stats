@@ -55,7 +55,6 @@ if __name__ == '__main__':
     while True:
         ret, img = camera.read()
 
-        # resize the frame, convert it to grayscale, and blur it
         img = imutils.resize(img, width=400)
 
         found, w = hog.detectMultiScale(img, winStride=(8,8), padding=(32,32), scale=1.05)
