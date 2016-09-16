@@ -10,6 +10,8 @@ def windowToFieldCoordinatesX(xp, yp, x1, y1, x2, y2, x3, y3, x4, y4):
         [x2, y2],
         [x3, y3],
         [x4, y4]], dtype = "float32")
+
+    # those should be the same aspect as the real width/height of field
     maxWidth = x4-x1
     maxHeight = y1-y2
 
@@ -53,11 +55,14 @@ while True:
     topRight = [270, 200, 0]
     bottomRight = [400, 400, 0]
 
+    fieldOnCameraColor = (0, 255, 0)
+    fieldProjectedColor = (0, 125, 125)
+
     # draw field
-    cv2.line(img, (int(bottomLeft[0]), int(bottomLeft[1])), (int(topLeft[0]), int(topLeft[1])), (0, 255, 0), 2)
-    cv2.line(img, (int(topLeft[0]), int(topLeft[1])), (int(topRight[0]), int(topRight[1])), (0, 255, 0), 2)
-    cv2.line(img, (int(topRight[0]), int(topRight[1])), (int(bottomRight[0]), int(bottomRight[1])), (0, 255, 0), 2)
-    cv2.line(img, (int(bottomRight[0]), int(bottomRight[1])), (int(bottomLeft[0]), int(bottomLeft[1])), (0, 255, 0), 2)
+    cv2.line(img, (int(bottomLeft[0]), int(bottomLeft[1])), (int(topLeft[0]), int(topLeft[1])), fieldOnCameraColor, 2)
+    cv2.line(img, (int(topLeft[0]), int(topLeft[1])), (int(topRight[0]), int(topRight[1])), fieldOnCameraColor, 2)
+    cv2.line(img, (int(topRight[0]), int(topRight[1])), (int(bottomRight[0]), int(bottomRight[1])), fieldOnCameraColor, 2)
+    cv2.line(img, (int(bottomRight[0]), int(bottomRight[1])), (int(bottomLeft[0]), int(bottomLeft[1])), fieldOnCameraColor, 2)
 
     def toFieldCoord(coordX, coordY):
         # call the algorithm
@@ -70,16 +75,15 @@ while True:
     topRightField = toFieldCoord(topRight[0], topRight[1])
 
     # draw field
-    cv2.line(img, (int(bottomLeftField[0]), int(bottomLeftField[1])), (int(topLeftField[0]), int(topLeftField[1])), (0, 255, 0), 2)
-    cv2.line(img, (int(topLeftField[0]), int(topLeftField[1])), (int(topRightField[0]), int(topRightField[1])), (0, 255, 0), 2)
-    cv2.line(img, (int(topRightField[0]), int(topRightField[1])), (int(bottomRightField[0]), int(bottomRightField[1])), (0, 255, 0), 2)
-    cv2.line(img, (int(bottomRightField[0]), int(bottomRightField[1])), (int(bottomLeftField[0]), int(bottomLeftField[1])), (0, 255, 0), 2)
+    cv2.line(img, (int(bottomLeftField[0]), int(bottomLeftField[1])), (int(topLeftField[0]), int(topLeftField[1])), fieldProjectedColor, 2)
+    cv2.line(img, (int(topLeftField[0]), int(topLeftField[1])), (int(topRightField[0]), int(topRightField[1])), fieldProjectedColor, 2)
+    cv2.line(img, (int(topRightField[0]), int(topRightField[1])), (int(bottomRightField[0]), int(bottomRightField[1])), fieldProjectedColor, 2)
+    cv2.line(img, (int(bottomRightField[0]), int(bottomRightField[1])), (int(bottomLeftField[0]), int(bottomLeftField[1])), fieldProjectedColor, 2)
 
     # MOUSE STUFFZ
     def onmouse(event, x, y, flags, param):
         valueFromAlgorithm = toFieldCoord(x,y)
-        print x,y
-        cv2.circle(img, (valueFromAlgorithm[1], valueFromAlgorithm[0]), 10, (255, 0, 0), 2)
+        cv2.circle(img, (valueFromAlgorithm[0], valueFromAlgorithm[1]), 10, (255, 0, 0), 2)
 
         cv2.imshow('plane', img)
 
