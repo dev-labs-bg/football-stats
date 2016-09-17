@@ -12,6 +12,18 @@ import numpy as np
 from coordinate_transform import windowToFieldCoordinates
 from average_coordinates import getRunningAverageCoordinates
 
+# Mouse class definition
+class Mouse:
+	x = 0
+	y = 0
+	clicked = False
+
+	def left_click(self,event,x,y,flags,param):
+		if event == cv2.EVENT_LBUTTONDOWN:
+			mouse.x = x
+			mouse.y = y
+			mouse.clicked = True
+
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="path to the video file")
@@ -27,21 +39,44 @@ if args.get("video", None) is None:
 else:
 	camera = cv2.VideoCapture(args["video"])
 
+# init frame_count and create mouse object
+frame_count = 0
+mouse = Mouse()
+
+# get BackgroundSubtractor object
 fgbg = cv2.BackgroundSubtractorMOG2()
 
 # loop over the frames of the video
 while True:
-	# grab the current frame and initialize the occupied/unoccupied
-	# text
+	# grab the current frames
 	(grabbed, frame) = camera.read()
 
-	# if the frame could not be grabbed, then we have reached the end
-	# of the video
+	# if the frame could not be grabbed, then end is reached
 	if not grabbed:
 		break
 
-	# resize the frame, convert it to grayscale, and blur it
-	frame = imutils.resize(frame, width=600)
+	# increase frame count
+	frame_count += 1
+
+	# resize the frame, to lessen the burden on CPU
+	frame = imutils.resize(frame, width=800)
+
+	# freeze first frame util user provides the area of the field
+	# (4 points should be given by mouse clicks)
+	if frame_count == 1:
+		cv2.imshow('frame',frame)	
+		cv2.setMouseCallback('frame', mouse.left_click)
+		i = 0
+		coords = []
+		while i < 4:
+			i += 1
+			mouse.x = 0
+			mouse.y = 0
+			mouse.clicked = False
+			while mouse.clicked == False:
+				# wait for key press
+				key = cv2.waitKey(1) & 0xFF
+			coords.append((mouse.x, mouse.y))
 
 	fgmask = fgbg.apply(frame, learningRate=0.02)
 
@@ -51,6 +86,7 @@ while True:
 
 	(contours, _) = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
 		cv2.CHAIN_APPROX_SIMPLE)
+	
 	# loop over the contours
 	for contour in contours:
 		# if the contour is too small, ignore it
@@ -66,10 +102,10 @@ while True:
 		cv2.circle(frame, basepoint, 3, (0,0,255), 2)
 
 	# perspective coordinates
-	(xa1, ya1) = (225, 150)
-	(xa2, ya2) = (490, 150)
-	(xa3, ya3) = (595, 335)
-	(xa4, ya4) = (60, 335)
+	(xa1, ya1) = coords[0]
+	(xa2, ya2) = coords[1]
+	(xa3, ya3) = coords[2]
+	(xa4, ya4) = coords[3]
 
 	# draw perspective filed, line by line
 	cv2.line(frame, (xa1, ya1), (xa2, ya2), (0, 255, 0), 2)
