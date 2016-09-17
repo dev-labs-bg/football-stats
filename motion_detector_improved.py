@@ -46,18 +46,19 @@ mouse = Mouse()
 # get BackgroundSubtractor object
 fgbg = cv2.BackgroundSubtractorMOG2()
 
+# get bird-eye field dimensions
+resultWidth = 280#xb2 - xb1
+resultHeight = 334#yb3 - yb1
+padding = 20
+
 # Create a black image
-field = np.zeros((384,256,3), np.uint8)
+field = np.zeros((resultHeight + padding*2,resultWidth + padding*2,3), np.uint8)
 
 # bird-eye rectangle coordinates
-(xb1, yb1) = (20, 20)
-(xb2, yb2) = (230, 20)
-(xb3, yb3) = (230, 350)
-(xb4, yb4) = (20, 350)
-
-# get bird-eye field dimensions
-resultWidth = xb2 - xb1
-resultHeight = yb3 - yb1
+(xb1, yb1) = (padding, padding)
+(xb2, yb2) = (padding + resultWidth, padding)
+(xb3, yb3) = (padding + resultWidth, padding + resultHeight)
+(xb4, yb4) = (padding, padding + resultHeight)
 
 # draw bird-eye filed, line by line
 cv2.line(field, (xb1, yb1), (xb2, yb2), (0, 255, 0), 2)
@@ -142,12 +143,20 @@ while True:
 			xb = xb1 + int(resultCoord[0])
 			yb = yb1 + int(resultCoord[1])
 
-			overlay = field.copy()
-			cv2.circle(overlay, (xb, yb), 0, (0,0,255), 10)
-			alpha = 0.1
-			cv2.addWeighted(overlay, alpha, field, 1 - alpha, 0, field)
+			# draw overlayed opacity circle every 10 frames
+			if frame_count % 5 == 0:
+				overlay = field.copy()
+				cv2.circle(overlay, (xb, yb), 0, (0,0,255), 15)
+				alpha = 0.25
+				cv2.addWeighted(overlay, alpha, field, 1 - alpha, 0, field)
 
 	cv2.imshow('frame',frame)
+	def clickDebug(event,x,y,flags,param):
+		resultCoord = windowToFieldCoordinates(x, y, xa1, ya1, xa2, ya2, xa3, ya3, xa4, ya4, resultWidth, resultHeight)
+		print "Coordinates to real coordinates", resultCoord
+	# UNCOMMENT IF YOU WANT TO DEBUG
+	# cv2.setMouseCallback('frame', clickDebug)
+
 	# cv2.imshow('thresh',thresh)
 	cv2.imshow('field',field)
 
