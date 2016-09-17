@@ -9,6 +9,7 @@ import imutils
 import time
 import cv2
 import numpy as np
+from coordinate_transform import windowToFieldCoordinates
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -76,7 +77,7 @@ while True:
 	cv2.line(frame, (xa4, ya4), (xa1, ya1), (0, 255, 0), 2)
 
 	# Create a black image
-	img = np.zeros((384,256,3), np.uint8)
+	field = np.zeros((384,256,3), np.uint8)
 
 	# bird-eye rectangle coordinates
 	(xb1, yb1) = (20, 20)
@@ -85,36 +86,27 @@ while True:
 	(xb4, yb4) = (20, 350)
 
 	# draw bird-eye filed, line by line
-	cv2.line(img, (xb1, yb1), (xb2, yb2), (0, 255, 0), 2)
-	cv2.line(img, (xb2, yb2), (xb3, yb3), (0, 255, 0), 2)
-	cv2.line(img, (xb3, yb3), (xb4, yb4), (0, 255, 0), 2)
-	cv2.line(img, (xb4, yb4), (xb1, yb1), (0, 255, 0), 2)
+	cv2.line(field, (xb1, yb1), (xb2, yb2), (0, 255, 0), 2)
+	cv2.line(field, (xb2, yb2), (xb3, yb3), (0, 255, 0), 2)
+	cv2.line(field, (xb3, yb3), (xb4, yb4), (0, 255, 0), 2)
+	cv2.line(field, (xb4, yb4), (xb1, yb1), (0, 255, 0), 2)
 
+	# get the basepoint original coordinates
 	(xa, ya) = basepoint
 
-	# test
-	font = cv2.FONT_HERSHEY_SIMPLEX
-	text = "%d, %d" % (xa, ya)
-	cv2.putText(frame, text, (xa,ya), font, 1, (255,255,255), 2)
+	# get bird-eye field dimensions
+	resultWidth = xb2 - xb1
+	resultHeight = yb3 - yb1
+	
+	resultCoord = windowToFieldCoordinates(xa, ya, xa1, ya1, xa2, ya2, xa3, ya3, xa4, ya4, resultWidth, resultHeight)
+	xb = xb1 + int(resultCoord[0])
+	yb = yb1 + int(resultCoord[1])
 
-	if xa < int((xa2 - xa1)/2):
-		x0 = xa1
-		# x0 = xa1 - int((xa1 - xa4) * ((ya - ya1)/(ya3 - ya1)))
-		xb = xb1 + int(((xb2 - xb1)/2) * ((xa - x0)/(((xa2 - xa1)/2)-x0)))
-	else:
-		x0 = xa2
-		# x0 = xa2 + int((xa3 - xa2) * ((ya - ya1)/(ya3 - ya1)))
-		xb = ((xb2 - xb1)/2) + int(((xb2 - xb1)/2) * ((xa - ((xa2 - xa1)/2))/(x0 - ((xa2 - xa1)/2))))
-
-	# test
-	cv2.circle(frame, (x0, ya), 3, (0,0,255), 2)
-
-	yb = yb1 + int((yb3 - yb1) * ((ya - ya1)/(ya3 - ya1)))
-	cv2.circle(img, (xb, yb), 3, (0,0,255), 2)
+	cv2.circle(field, (xb, yb), 3, (0,0,255), 2)
 
 	cv2.imshow('frame',frame)	
 	# cv2.imshow('thresh',thresh)
-	cv2.imshow('field',img)
+	cv2.imshow('field',field)
 
 	# wait for key press
 	key = cv2.waitKey(1) & 0xFF

@@ -2,37 +2,7 @@ import argparse
 import cv2
 import time
 import numpy as np
-
-# this is the badass algorithm, from openCV, as mine didn't work :(
-def windowToFieldCoordinatesX(xp, yp, x1, y1, x2, y2, x3, y3, x4, y4):
-    src = np.array([
-        [x1, y1],
-        [x2, y2],
-        [x3, y3],
-        [x4, y4]], dtype = "float32")
-
-    # those should be the same aspect as the real width/height of field
-    maxWidth = x4-x1
-    maxHeight = y1-y2
-
-    # make a destination rectangle with the width and height of above (starts at 0,0)
-    dst = np.array([
-        [0, 0],
-        [maxWidth - 1, 0],
-        [maxWidth - 1, maxHeight - 1],
-        [0, maxHeight - 1]], dtype = "float32")
-
-    # find the transformation matrix for our transforms
-    transformationMatrix = cv2.getPerspectiveTransform(src, dst)
-
-    # put the original (source) x,y points in an array (not sure why do we have to put it 3 times though)    
-    original = np.array([((xp, yp), (xp, yp), (xp, yp))], dtype=np.float32)
-
-    # use perspectiveTransform to transform our original(mouse coords) to new coords with the transformation matrix
-    transformed = cv2.perspectiveTransform(original, transformationMatrix)[0][0]
-
-    return transformed
-
+from coordinate_transform import windowToFieldCoordinates
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -45,7 +15,7 @@ if args.get("video", None) is None:
 	time.sleep(0.25)
 # otherwise, we are reading from a video file
 else:
-	camera = cv2.VideoCapture(os.path.join( args["video"] ))
+	camera = cv2.VideoCapture(args["video"])
 
 while True:
     ret, img = camera.read()
@@ -66,7 +36,7 @@ while True:
 
     def toFieldCoord(coordX, coordY):
         # call the algorithm
-        valueFromAlgorithm = windowToFieldCoordinatesX(coordX, coordY, bottomLeft[0], bottomLeft[1], topLeft[0], topLeft[1], topRight[0], topRight[1], bottomRight[0], bottomRight[1])
+        valueFromAlgorithm = windowToFieldCoordinates(coordX, coordY, bottomLeft[0], bottomLeft[1], topLeft[0], topLeft[1], topRight[0], topRight[1], bottomRight[0], bottomRight[1])
         return valueFromAlgorithm
     
     bottomLeftField = toFieldCoord(bottomLeft[0], bottomLeft[1])
