@@ -10,6 +10,7 @@ import time
 import cv2
 import numpy as np
 from coordinate_transform import windowToFieldCoordinates
+from average_coordinates import getRunningAverageCoordinates
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -91,6 +92,8 @@ while True:
 	cv2.line(field, (xb3, yb3), (xb4, yb4), (0, 255, 0), 2)
 	cv2.line(field, (xb4, yb4), (xb1, yb1), (0, 255, 0), 2)
 
+	basepoint = getRunningAverageCoordinates(basepoint)
+
 	# get the basepoint original coordinates
 	(xa, ya) = basepoint
 
@@ -104,7 +107,7 @@ while True:
 
 	cv2.circle(field, (xb, yb), 3, (0,0,255), 2)
 
-	cv2.imshow('frame',frame)	
+	cv2.imshow('frame',frame)
 	# cv2.imshow('thresh',thresh)
 	cv2.imshow('field',field)
 
