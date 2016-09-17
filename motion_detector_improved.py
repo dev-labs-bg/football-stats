@@ -46,6 +46,25 @@ mouse = Mouse()
 # get BackgroundSubtractor object
 fgbg = cv2.BackgroundSubtractorMOG2()
 
+# Create a black image
+field = np.zeros((384,256,3), np.uint8)
+
+# bird-eye rectangle coordinates
+(xb1, yb1) = (20, 20)
+(xb2, yb2) = (230, 20)
+(xb3, yb3) = (230, 350)
+(xb4, yb4) = (20, 350)
+
+# get bird-eye field dimensions
+resultWidth = xb2 - xb1
+resultHeight = yb3 - yb1
+
+# draw bird-eye filed, line by line
+cv2.line(field, (xb1, yb1), (xb2, yb2), (0, 255, 0), 2)
+cv2.line(field, (xb2, yb2), (xb3, yb3), (0, 255, 0), 2)
+cv2.line(field, (xb3, yb3), (xb4, yb4), (0, 255, 0), 2)
+cv2.line(field, (xb4, yb4), (xb1, yb1), (0, 255, 0), 2)
+
 # loop over the frames of the video
 while True:
 	# grab the current frames
@@ -78,6 +97,18 @@ while True:
 				key = cv2.waitKey(1) & 0xFF
 			coords.append((mouse.x, mouse.y))
 
+	# perspective coordinates
+	(xa1, ya1) = coords[0]
+	(xa2, ya2) = coords[1]
+	(xa3, ya3) = coords[2]
+	(xa4, ya4) = coords[3]
+
+	# draw perspective filed, line by line
+	cv2.line(frame, (xa1, ya1), (xa2, ya2), (0, 255, 0), 2)
+	cv2.line(frame, (xa2, ya2), (xa3, ya3), (0, 255, 0), 2)
+	cv2.line(frame, (xa3, ya3), (xa4, ya4), (0, 255, 0), 2)
+	cv2.line(frame, (xa4, ya4), (xa1, ya1), (0, 255, 0), 2)
+
 	fgmask = fgbg.apply(frame, learningRate=0.02)
 
 	fgmask = cv2.GaussianBlur(fgmask, (21, 21), 0)
@@ -96,52 +127,25 @@ while True:
 		# compute the bounding box for the contour, draw it on the frame,
 		# and update the text
 		(x, y, w, h) = cv2.boundingRect(contour)
-		cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
 		basepoint = ((x + (w/2)), (y + h))
-		cv2.circle(frame, basepoint, 3, (0,0,255), 2)
+		resultCoord = windowToFieldCoordinates(basepoint[0], basepoint[1], xa1, ya1, xa2, ya2, xa3, ya3, xa4, ya4, resultWidth, resultHeight)
+		resX = int(resultCoord[0])
+		resY = int(resultCoord[1])
 
-	# perspective coordinates
-	(xa1, ya1) = coords[0]
-	(xa2, ya2) = coords[1]
-	(xa3, ya3) = coords[2]
-	(xa4, ya4) = coords[3]
+		if resX < 0 or resX > resultWidth or resY < 0 or resY > resultHeight:
+			print "Skipped a contour, not a cool contour"
+		else:
+			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+			cv2.circle(frame, basepoint, 3, (0, 0, 255), 2)
 
-	# draw perspective filed, line by line
-	cv2.line(frame, (xa1, ya1), (xa2, ya2), (0, 255, 0), 2)
-	cv2.line(frame, (xa2, ya2), (xa3, ya3), (0, 255, 0), 2)
-	cv2.line(frame, (xa3, ya3), (xa4, ya4), (0, 255, 0), 2)
-	cv2.line(frame, (xa4, ya4), (xa1, ya1), (0, 255, 0), 2)
+			resultCoord = getRunningAverageCoordinates(resultCoord)
+			xb = xb1 + int(resultCoord[0])
+			yb = yb1 + int(resultCoord[1])
 
-	# Create a black image
-	field = np.zeros((384,256,3), np.uint8)
-
-	# bird-eye rectangle coordinates
-	(xb1, yb1) = (20, 20)
-	(xb2, yb2) = (230, 20)
-	(xb3, yb3) = (230, 350)
-	(xb4, yb4) = (20, 350)
-
-	# draw bird-eye filed, line by line
-	cv2.line(field, (xb1, yb1), (xb2, yb2), (0, 255, 0), 2)
-	cv2.line(field, (xb2, yb2), (xb3, yb3), (0, 255, 0), 2)
-	cv2.line(field, (xb3, yb3), (xb4, yb4), (0, 255, 0), 2)
-	cv2.line(field, (xb4, yb4), (xb1, yb1), (0, 255, 0), 2)
-
-	basepoint = getRunningAverageCoordinates(basepoint)
-
-	# get the basepoint original coordinates
-	(xa, ya) = basepoint
-
-	# get bird-eye field dimensions
-	resultWidth = xb2 - xb1
-	resultHeight = yb3 - yb1
-	
-	resultCoord = windowToFieldCoordinates(xa, ya, xa1, ya1, xa2, ya2, xa3, ya3, xa4, ya4, resultWidth, resultHeight)
-	xb = xb1 + int(resultCoord[0])
-	yb = yb1 + int(resultCoord[1])
-
-	cv2.circle(field, (xb, yb), 3, (0,0,255), 2)
+			overlay = field.copy()
+			cv2.circle(overlay, (xb, yb), 0, (0,0,255), 10)
+			alpha = 0.1
+			cv2.addWeighted(overlay, alpha, field, 1 - alpha, 0, field)
 
 	cv2.imshow('frame',frame)
 	# cv2.imshow('thresh',thresh)
