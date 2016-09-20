@@ -1,5 +1,5 @@
 previousTen = []
-def getRunningAverageCoordinates(basepoint, historySize = 10, maxDistance = 100):
+def getRunningAverageCoordinates(basepoint, historySize = 10, maxDistance = 250):
 	outsideOfMaxDistanceRange = False
 
 	# calculate distance from previous basepoint

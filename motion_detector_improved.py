@@ -157,7 +157,7 @@ while True:
 	# UNCOMMENT IF YOU WANT TO DEBUG
 	# cv2.setMouseCallback('frame', clickDebug)
 
-	# cv2.imshow('thresh',thresh)
+	cv2.imshow('thresh',thresh)
 	cv2.imshow('field',field)
 
 	# wait for key press
