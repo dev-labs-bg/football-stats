@@ -5,7 +5,7 @@ Football stats е система, която ще помогне при анал
 # Как да стартирам демото?
 
 1. Инсталирате си Python и PIP (ако не върви с него)
-2. `pip install липсваща_библиотека`
+2. `pip install липсваща_библиотека`(вероятно ще трябва да инсталирате тези библиотеки: imutils, numpy, cv2)
 3. Инсталирате си OpenCV (за Windows: http://docs.opencv.org/3.1.0/d5/de5/tutorial_py_setup_in_windows.html, за Mac много подобен процес, питайте Цецо при проблеми ;) )
 4. стартирате demo-то с `python motion_detector_improved.py --video път_към_видео_файл` или `python motion_detector_improved.py` ще тръгне с видео от камерата ви
 5. Кликвате 4 пъти на екрана очертавайки игралното поле
