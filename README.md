@@ -14,6 +14,12 @@ Football stats е система, която ще помогне при анал
 # Sprint 1:
 - Първи спринт започна на 13.09.2016 с екип (по произволен, латинско-азбучен ред): Цецо (ceco@devlabs.bg), Радо (rado@devlabs.bg), Веселин (veselin@devlabs.bg) в development и Гого (goran@devlabs.bg) в съпорт. Изключително сме доволни от проявеният интерес от останалите ни колеги, интересните дискусии и спонтанните брейнсторминг сесии, които спринта инициира. Kudos, както се казва по български.
 
+## Video Обобщение
+
+Summary на информацията за спринта и представяне на демото можете да видите във видеото, което заснехме за вас с много любов <3
+
+https://www.youtube.com/watch?v=R9vkffBp5Qc
+
 ## Процеса на работа
 
 ### Ден първи
@@ -63,7 +69,7 @@ Sprint 1 scope:
 
 ### Ден четвърти
 
-Разполагахме с някакъв background и working examples по OpenCV, заснехме няколко <insert links with silly videos here> sample видеа отзад в #лятнатаГрадина и започнахме да подготвяме working prototype за идеята върху тях. 
+Разполагахме с някакъв background и working examples по OpenCV, заснехме няколко sample видеа отзад в #лятнатаГрадина (Изтегли видео от демото тук: https://drive.google.com/file/d/0Bw_RSgw8AS5IUWV0QTRxdXBmUFE/view?usp=sharing ) и започнахме да подготвяме working prototype за идеята върху тях. 
 Набелязахме нещата, които можем да използваме:
 - motion detection алгоритми - за да знаем къде има нещо по игрището
 - text/letter recognition или object recognition за разпознаване на въпросното от по-горе "нещо" кой играч всъщност е
