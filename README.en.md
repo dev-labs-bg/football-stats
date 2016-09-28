@@ -5,13 +5,16 @@ Football stats is a system which has the purpose of helping football match analy
 # How do I start the demo?
 
 1. Install Python and PIP (if not already included)
-2. Install necessary libraries: `pip install <missing_library>` (you would most probably need to install the following libraries: imutils, numpy, cv2)
+2. Install necessary python libraries: `pip install -r requirements.txt`
 3. Install OpenCV:
     * for Windows: http://docs.opencv.org/3.1.0/d5/de5/tutorial_py_setup_in_windows.html
 	* for Mac:
 		+ install homebrew (http://brew.sh)
 		+ `brew tap homebrew/science`
 		+ `brew install opencv`
+		+ `echo 'import site; site.addsitedir("/usr/local/lib/python2.7/site-packages")' >> ~/Library/Python/2.7/lib/python/site-packages/homebrew.pth`
+		+ `echo 'import sys; sys.path.insert(1, "/usr/local/lib/python2.7/site-packages")' >> ~/Library/Python/2.7/lib/python/site-packages/homebrew.pth`
+		(NOTE: the last two lines activate the OpoenCV python module installed with homebrew; change paths accordingly to your Python version)
 4. Start the demo with:
 	* `python main.py --video <path_to_video_file>` - for usage with pre-recorded video file
 	* `python main.py` - for using the camera's live feed as source
