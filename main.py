@@ -9,20 +9,21 @@ import imutils
 import time
 import cv2
 import numpy as np
-from coordinate_transform import windowToFieldCoordinates
-from average_coordinates import getRunningAverageCoordinates
+from lib.coordinate_transform import windowToFieldCoordinates
+from lib.average_coordinates import getRunningAverageCoordinates
+from lib.mouse import Mouse
 
 # Mouse class definition
-class Mouse:
-	x = 0
-	y = 0
-	clicked = False
+# class Mouse:
+# 	x = 0
+# 	y = 0
+# 	clicked = False
 
-	def left_click(self,event,x,y,flags,param):
-		if event == cv2.EVENT_LBUTTONDOWN:
-			mouse.x = x
-			mouse.y = y
-			mouse.clicked = True
+# 	def left_click(self,event,x,y,flags,param):
+# 		if event == cv2.EVENT_LBUTTONDOWN:
+# 			mouse.x = x
+# 			mouse.y = y
+# 			mouse.clicked = True
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -75,11 +76,11 @@ while True:
 	if not grabbed:
 		break
 
-	# increase frame count
-	frame_count += 1
-
 	# resize the frame, to lessen the burden on CPU
 	frame = imutils.resize(frame, width=800)
+
+	# increase frame count
+	frame_count += 1
 
 	# freeze first frame util user provides the area of the field
 	# (4 points should be given by mouse clicks)
