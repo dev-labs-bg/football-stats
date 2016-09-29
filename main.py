@@ -18,8 +18,6 @@ from lib.user_interaction import getPerpectiveCoordinates
 from lib.user_interaction import leftClickDebug
 from lib.fgbg_calculations import getThresholdedFrame
 from lib.heatmap import Heatmap
-# from lib.heatmap import getPosAbsoluteCoordinates
-# from lib.heatmap import drawOpacityCircle
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
