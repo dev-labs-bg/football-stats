@@ -8,16 +8,9 @@ import time
 import os
 import imutils
 
-help_message = '''
-USAGE: facedetect.py [--cascade <cascade_fn>] [--nested-cascade <cascade_fn>] [<video_source>]
-ESC to exit!
-'''
-
-
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="path to the video file")
-ap.add_argument("-a", "--min-area", type=int, default=300, help="minimum area size")
 args = vars(ap.parse_args())
 
 # if the video argument is None, then we are reading from webcam
@@ -27,7 +20,6 @@ if args.get("video", None) is None:
 # otherwise, we are reading from a video file
 else:
 	camera = cv2.VideoCapture(os.path.join( args["video"] ))
-
 
 def inside(r, q):
     rx, ry, rw, rh = r
@@ -44,7 +36,6 @@ def draw_detections(img, rects, thickness = 1):
 
 if __name__ == '__main__':
     import sys, getopt
-    print help_message
     from glob import glob
     import itertools as it
 

@@ -2,7 +2,6 @@ import cv2
 
 # apply color subtractions and calculations to get a black and white frame
 #
-# arguments:
 # fgbg		BackgroundSubtractorMOG2 object
 # frame
 def getThresholdedFrame(fgbg, frame):

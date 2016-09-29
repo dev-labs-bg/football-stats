@@ -15,7 +15,7 @@ from lib.average_coordinates import getRunningAverageCoordinates
 from lib.video_source import getVideoSource
 from lib.polygon import drawQuadrilateral
 from lib.user_interaction import getPerpectiveCoordinates
-from lib.user_interaction import clickDebug
+from lib.user_interaction import leftClickDebug
 from lib.fgbg_calculations import getThresholdedFrame
 from lib.heatmap import Heatmap
 # from lib.heatmap import getPosAbsoluteCoordinates
@@ -31,8 +31,8 @@ args = vars(ap.parse_args())
 # get the video source: camera or file
 video = getVideoSource(args)
 
-# init frame_count and create mouse object
-frame_count = 0
+# init frameCount and create mouse object
+frameCount = 0
 mouse = Mouse()
 
 # get BackgroundSubtractor object
@@ -74,11 +74,11 @@ while True:
 	frame = imutils.resize(frame, width=800)
 
 	# increase frame count
-	frame_count += 1
+	frameCount += 1
 
 	# freeze first frame util user provides the area of the field
 	# (4 points should be given by mouse clicks)
-	if frame_count == 1:
+	if frameCount == 1:
 		coords = getPerpectiveCoordinates(frame, 'frame', mouse)
 
 	# perspective coordinates
@@ -106,29 +106,29 @@ while True:
 
 		# compute the bounding box for the contour, draw it on the frame
 		(x, y, w, h) = cv2.boundingRect(contour)
-		basepoint = ((x + (w/2)), (y + h))
+		basePoint = ((x + (w/2)), (y + h))
 
 		# get the top-view relative coordinates
-		(xb_rel, yb_rel) = heatmap.getPosRelativeCoordinates(basepoint, xa1, ya1, xa2, ya2, xa3, ya3, xa4, ya4)
+		(xbRel, ybRel) = heatmap.getPosRelativeCoordinates(basePoint, xa1, ya1, xa2, ya2, xa3, ya3, xa4, ya4)
 
-		if xb_rel < 0 or xb_rel > resultWidth or yb_rel < 0 or yb_rel > resultHeight:
+		if xbRel < 0 or xbRel > resultWidth or ybRel < 0 or ybRel > resultHeight:
 			print "Skipped a contour, not a cool contour"
 		else:
 			# draw rectangle around the detected object and a red point in the center of its base
 			cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-			cv2.circle(frame, basepoint, 3, (0, 0, 255), 2)
+			cv2.circle(frame, basePoint, 3, (0, 0, 255), 2)
 			
 			# get the top-view absolute coordinates
-			(xb, yb) = heatmap.getPosAbsoluteCoordinates((xb_rel, yb_rel), (xb1, yb1))
+			(xb, yb) = heatmap.getPosAbsoluteCoordinates((xbRel, ybRel), (xb1, yb1))
 
 			# draw overlayed opacity circle every 5 frames
-			if frame_count % 5 == 0:
+			if frameCount % 5 == 0:
 				heatmap.drawOpacityCircle(xb, yb, 255, 0, 0, 0, 15)
 
 	# display all windows
 	cv2.imshow('frame',frame)
 	# UNCOMMENT IF YOU WANT TO DEBUG
-	# cv2.setMouseCallback('frame', clickDebug)
+	# cv2.setMouseCallback('frame', leftClickDebug)
 	cv2.imshow('thresh',thresh)
 	cv2.imshow('field',field)
 

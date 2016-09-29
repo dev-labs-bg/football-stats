@@ -4,8 +4,8 @@ import time
 import numpy as np
 
 # this is the badass algorithm, from openCV, as mine didn't work :(
-def windowToFieldCoordinates(basepoint, x1, y1, x2, y2, x3, y3, x4, y4, maxWidth=0, maxHeight=0):
-    (xp, yp) = basepoint
+def windowToFieldCoordinates(basePoint, x1, y1, x2, y2, x3, y3, x4, y4, maxWidth=0, maxHeight=0):
+    (xp, yp) = basePoint
     src = np.array([
         [x1, y1],
         [x2, y2],

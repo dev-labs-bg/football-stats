@@ -4,21 +4,10 @@ import time
 import numpy as np
 from coordinate_transform import windowToFieldCoordinates
 
-# construct the argument parser and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-v", "--video", help="path to the video file")
-ap.add_argument("-a", "--min-area", type=int, default=300, help="minimum area size")
-args = vars(ap.parse_args())
-# if the video argument is None, then we are reading from webcam
-if args.get("video", None) is None:
-	camera = cv2.VideoCapture(0)
-	time.sleep(0.25)
-# otherwise, we are reading from a video file
-else:
-	camera = cv2.VideoCapture(args["video"])
-
-while True:
-    ret, img = camera.read()
+# MOUSE STUFFZ
+def onmouse(event, x, y, flags, param):
+    # create a black image/frame
+    img = np.zeros((480, 640, 3), np.uint8)
 
     bottomLeft = [100, 400, 0]
     topLeft = [220, 200, 0]
@@ -36,9 +25,9 @@ while True:
 
     def toFieldCoord(coordX, coordY):
         # call the algorithm
-        valueFromAlgorithm = windowToFieldCoordinates(coordX, coordY, bottomLeft[0], bottomLeft[1], topLeft[0], topLeft[1], topRight[0], topRight[1], bottomRight[0], bottomRight[1])
+        valueFromAlgorithm = windowToFieldCoordinates((coordX, coordY), bottomLeft[0], bottomLeft[1], topLeft[0], topLeft[1], topRight[0], topRight[1], bottomRight[0], bottomRight[1])
         return valueFromAlgorithm
-    
+
     bottomLeftField = toFieldCoord(bottomLeft[0], bottomLeft[1])
     bottomRightField = toFieldCoord(bottomRight[0], bottomRight[1])
     topLeftField = toFieldCoord(topLeft[0], topLeft[1])
@@ -50,15 +39,17 @@ while True:
     cv2.line(img, (int(topRightField[0]), int(topRightField[1])), (int(bottomRightField[0]), int(bottomRightField[1])), fieldProjectedColor, 2)
     cv2.line(img, (int(bottomRightField[0]), int(bottomRightField[1])), (int(bottomLeftField[0]), int(bottomLeftField[1])), fieldProjectedColor, 2)
 
-    # MOUSE STUFFZ
-    def onmouse(event, x, y, flags, param):
-        valueFromAlgorithm = toFieldCoord(x,y)
-        cv2.circle(img, (valueFromAlgorithm[0], valueFromAlgorithm[1]), 10, (255, 0, 0), 2)
-
-        cv2.imshow('plane', img)
+    valueFromAlgorithm = toFieldCoord(x,y)
+    cv2.circle(img, (valueFromAlgorithm[0], valueFromAlgorithm[1]), 10, (255, 0, 0), 2)
 
     cv2.imshow('plane', img)
-    cv2.setMouseCallback('plane', onmouse)
 
+# create a black image/frame
+img = np.zeros((480, 640, 3), np.uint8)
+
+cv2.imshow('plane', img)
+cv2.setMouseCallback('plane', onmouse)
+
+while True:
     if 0xFF & cv2.waitKey(5) == 27:
         break
