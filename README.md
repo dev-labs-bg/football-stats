@@ -1,99 +1,123 @@
-# Здравейте приятелчета!
+# Hello, my friends!
 
-Football stats е система, която ще помогне при анализирането на футболните мачове. Крайният резултат, ще бъде анализиране на позициите на играчите, топката и разиграните ситуации и изготвяне на heatmap-ове и статистики спрямо тези данни.
+Football stats is a system which has the purpose of helping football match analyses. The final goal of the project is to have the capability of ball and players' position analysis, creating heatmaps and statistics of different actions or situations.
 
-# Как да стартирам демото?
+Note: [Readme in BG | Прочети.ме на български](/README.bg.md)
 
-1. Инсталирате си Python и PIP (ако не върви с него)
-2. `pip install липсваща_библиотека`(вероятно ще трябва да инсталирате тези библиотеки: imutils, numpy, cv2)
-3. Инсталирате си OpenCV (за Windows: http://docs.opencv.org/3.1.0/d5/de5/tutorial_py_setup_in_windows.html, за Mac много подобен процес, питайте Цецо при проблеми ;) )
-4. стартирате demo-то с `python motion_detector_improved.py --video път_към_видео_файл` или `python motion_detector_improved.py` ще тръгне с видео от камерата ви
-5. Кликвате 4 пъти на екрана очертавайки игралното поле
-6. Profit
+# How do I start the demo?
 
-# Sprint 1:
-- Първи спринт започна на 13.09.2016 с екип (по произволен, латинско-азбучен ред): Цецо (ceco@devlabs.bg), Радо (rado@devlabs.bg), Веселин (veselin@devlabs.bg) в development и Гого (goran@devlabs.bg) в съпорт. Изключително сме доволни от проявеният интерес от останалите ни колеги, интересните дискусии и спонтанните брейнсторминг сесии, които спринта инициира. Kudos, както се казва по български.
+1. Install Python and PIP (if not already included)
+2. Install necessary python libraries: `pip install -r requirements.txt`
+3. Install OpenCV:
+    * for Windows: http://docs.opencv.org/3.1.0/d5/de5/tutorial_py_setup_in_windows.html
+	* for Mac:
+		+ install homebrew (http://brew.sh)
+		+ `brew tap homebrew/science`
+		+ `brew install opencv`
+		+ `echo 'import site; site.addsitedir("/usr/local/lib/python2.7/site-packages")' >> ~/Library/Python/2.7/lib/python/site-packages/homebrew.pth`
+		+ `echo 'import sys; sys.path.insert(1, "/usr/local/lib/python2.7/site-packages")' >> ~/Library/Python/2.7/lib/python/site-packages/homebrew.pth`
+		(NOTE: the last two lines activate the OpoenCV python module installed with homebrew; change paths accordingly to your Python version)
+4. Start the demo with:
+	* `python main.py --video <path_to_video_file>` - for usage with pre-recorded video file
+	* `python main.py` - for using the camera's live feed as source
+5. Once the script is running it will freeze at the first frame, and wait for you to provide four points on the screen (by left-button clicks with the mouse)
+6. Enjoy!
 
-## Video Обобщение
+## Project history and background info
 
-Summary на информацията за спринта и представяне на демото можете да видите във видеото, което заснехме за вас с много любов <3
+This project was born as part of an initiative of doing short 5-day sprints on trying to solve some problem.
 
-https://www.youtube.com/watch?v=R9vkffBp5Qc
+### Day 1
 
-## Процеса на работа
+We started with a rough idea and we needed to clear up the details to get started. After a few short meetings of the project's team members, we set ourselves some more clear goals for this project:
+* player movement heatmaps
+* point-in-time snapshots
+* statistics and reports on player speed, acceleration, heart rate, total shots, shots on target, passes (attempted,completed), ball possession percentage, corners, goal kicks, throw-ins.
 
-### Ден първи
+After a short discussion we decided that this Sprint-1 goals should be achievable, so that by Day-5 we could have something working as a prototype to get us started and provide validation of our idea. Then we could build on this in future phases of the project.
 
-Имахме почти изчистена идеята за продукта и трябваше да ошлайфаме добре детайлите. След кратка среща набелязахме конкретните цели, към които може да се стреми проекта:
-- Heatmaps за активността на играчите
-- Snapshot-и на моментни ситуации
-- Статистически репорти за скорост, ускорение, сърдечен ритъм, успеваемост на удърите, пасове, ball possession, out/corner/throw-ins и др.
+Sprint-1 scope:
+Build a proof-of-concept demo for detecting a player on the screen/field, track their movement and display it as a heatmap.
 
-След кратка дискусия стигнахме до заключението, че за scope първи е трябва да си поставим постижими цели, които да дадат старт на идеята или да валидират нейната изпълнимост.
+During some quick brainstorming sessions we drew a list of potential technologies, which could prove useful for identifying and determining a player and their position:
+* GPS
+* Image processing / computer vision
+* IR detection
+* 3D reconstruction
+* Bluetooth/WiFi signal strength trilateration
+* Ultrasonic sensors
+* Laser detectors
 
-Sprint 1 scope:
-Извличане на информация за позицията на играчите по игралното поле и нейната визуализация, изготвяне на proof-of-concept демо с code examples.
+We split the list of technologies/topics and did some research on them for the rest of the day one and half of day two. The idea was to gain some more insight into these topics and assess their usefulness for our project.
 
-След известно количество брейнсторминг набелязахме потенциалните кандидат-технологии, които може да се използват за определяне на позицията на играчите.
-- GPS
-- Image processing / Computer vision
-- IR Detection
-- 3D Reconstruction
-- Bluetooth/Wifi signal strength triangulation
-- Ultrasonic sensors
-- LAZERS!
+### Day 2
 
-Разпределихме задачите за research и остатъка от ден 1ви, както и част от ден 2ри мина в research/assessment на използваемостта на тези технологии за нашия проект.
+After the research was done, we made a discussion and did a summary on each technology's pros/cons. As a result we chose one of them to use in our project.
+* GPS - Consumer-grade devices do not provide good enough precision (errors of up to 4-8 meters, position update only 1 per second); there are higher-grade solutions, but they would require too much investment and energy for our iniatial goals of this project.
+* CV - A set of software technologies and algorithms for interpreting the visual information provided by images/videos. A bit steppig stone for in this field is the OpenCV library, which made CV a good candidate technology for our project's initial goals.
+* IR - Possible usage by attaching IR transmitters with varying wavelength on each player, and detect/recognise players by using different filters on the video; while not perfect, this approach deserves to be given a try, but probably not in this first phase, as we would lose the focus of the idea if we build the prototype in sprint one.
+* 3D - In short: taking a stereo image (shot with 2 cams, at least) and building a depth map; a nice technology, but would probably makе tracking a moving object very CPU intensive, and it'd probably be more suitable for precise reconstruction of a 3D object
+* BT - The idea was to try to determine player position by having them transmit BT signal (wristbands?) and have BT receivers around the field measure signal strength; Then by doing trilateration a player's position could be determined; However, after initial tests it turned out that BT signal degrades seriously at more than 4-5 metres and distance-to-signal strength mappings can be very hard to make; This meant that we would have to place BT receivers every 5 (at most 10) meters across the entire field; Not good. 
+* US - Cheap and easy to obtain technology for distance measurement; BUT reasearch shows that consumer-grade UltraSonic sensors provide adequate accuracy in up to 6-10 metres at best; Moreover, not suitable for noisy environments.
+* LZ - Cool technology, capable of high precision, long range distance measurement; the drawback is that it requires that the laser is pointed directly towards the measured object, meaning that the laser detector should somehow be able to track the player. So things get a bit complicated, such an implementation would require an array of lasers and/or complicated moving mechanics.
 
-### Ден втори
+At the end of the day, we decided to focus our efforts on computer vision and image processing with OpenCV.
 
-След research-а обобщихме екипно резултата за research-а по всяка една технология, набелязахме за тях плюсове и минуси, както и набелязахме кандидат-технологията, която искаме да използваме за проекта.
-- GPS - не достатъчна прецизност на GPS-ите в достъпните потребителски устройства (4-8м грешка, 1hz сигнали), Има евентуални възможности за решения чрез по-скъпо оборудване (по-корави GPS-и, с по-големи антени), които теоретично биха минимизирали грешката от 4 до 1м, както и инсталиране на RTK станция (https://en.wikipedia.org/wiki/Real_Time_Kinematic) - теоретично с "up to centimetre-level accuracy", прекалено скъпи и енергоемки решения за масовия потребител.
-- CV - накратко това са набор от софтуерни технологи и алгоритми за анализ на images/video с цел автоматично интерпретиране/разпознаване на визуалната информация от компютъра какво всъщност има в купчината пиксели, които изкарва на екрана. След кратък research стана ясно, че това със сигурност е нещо, което може да ни свърши работа и решихме да опитаме какво можем да направим с OpenCV библиотеката.
-- IR - за да работят (дори и неточно) са нужни множество светлинни източници по играчите, дори и тогава не е сигурно. Възможно е да помогне при идентифициране на играчите, като всеки играч "излъчва/свети" в различен infrared диапазон и за всеки играч се прилага различен филтър върху камерата. За ограниченото време в първи спринт преценихме, че трудно ще докараме работещ прототип и идеята на този етап отпадна.
-- 3D - 3D reconstruction накратко представлява взимане на stereo image (образ от две камери) и изготвяне на т.нар. depth map от тях. Сравняват се пикселите от единия образ с пикселите от другия образ, комбинирано с намиране на контури, се определя колко далеч от камерата се намира дадения обект. Процеса е сравнително податлив на грешки и неточни данни. Първата стъпка е изготвяне на point cloud, в който точките от камерата са позиционирани в 3D Пространството, той се преобразува в 3D модели като един вид се "свържат точките". За да се достигне прецизност тук е необходимо това да се изпълни върху повече от два кадъра за даден момент (т.е. да имаме повече от две камери на полето), като колкото повече камери има толкова по-точен може да бъде алгоритъма. Целият процес застъпва до голяма степен похвати от computer vision метода, като би бил по-неефективен за голям размер игрище и ресурсоемък (необходимост от много повече камери и непрекъснато обработване на кадрите от тях), като motion tracking-а би бил по-ефективен за нашия use case. Ако пресъздаваме 3D обекти например, този подход би бил по-подходящ. (напр. за 3D скенер) 
-- BT - не достатъчна прецизност на bluetooth устройствата, дори и с по-скъпа апаратура. Нужни са десетки bluetooth трансмитери дори и за прост detection на един обект. Твърде много (и скъпо) оборудване за масовия потребител.
-- US - По принцип е достъпна и сравнително евтина технология за измерване на разстояние/засичане на обекти, но навсякъде се говори за обхват до 6-10 метра в най-добрия случай (което не е достатъчно дори и за малко игрище). Също така, не е много подходящо в шумна среда (феновете обикновено са шумни, някои дори ползват вувузели ;), която може да води до изкривявания в сигналите.
-- LZ - яко е и може много прецизно да измери разстоянието до обект, дори и да е много далече, НО изисква изключително точно насочване. Това общо взето означава, че трябва да има по един лазер за всеки играч и трябва да се комбинира с технология (механика), която постоянно да следи играча и да насочва лазера към него. Друг вариант е няколко лазера, да се разположат на определени места покарай терена и да "сканират" (чрез постоянно въртене около оста си) заобикалящите ги обекти. Звучи интересно, но доста тегаво щеше да е да докараме нещо дори близко до proof-of-concept за 3-4 дни, което все пак беше една от целите на спринта. А и мисля, че такава технология би имала много по-добро приложение в друг вид проект, например self-driving колата.
+### Day 3
 
-В крайна сметка избрахме да се фокусираме върху computer vision и image processing с OpenCV.
+We marked the potential computer vision departments we wanted to dive into, so that we could achive our current goal of creating a prototype solution capable of detecting a player on the screen and track their movement. We split the tasks in 3 groups:
+* Player detection / motion tracking
+* Player identification
+* Player camera to field coordinates projection
 
-### Ден трети
+We once again split the tasks among the members of the team and started getting to know the OpenCV library's capabilities with the Python language - both of which were new to us.
 
-Набелязахме потенциалните направления от computer vision, които трябва да разучим за да успеем да извадим data за позицията на играчите по футболното игрище. Разделихме ги на 3 основни групи:
-- Player detection / motion tracking
-- Player identification
-- Player camera to field coordinates projection
+### Day 4
 
-Отново разделихме задачите и започнахме главно изучаване на предлаганите от библиотеката възможности за CV и запознаване с Python (езика, с който избрахме да цъкаме на OpenCV, никой от нас нямаше опит с Python, поехме този challenge).
+After reading some OpenCV docs and playing around with code examples, we had built some background and had a better understading of the library's capabilities. We shot some sample videos (one or more of us holding a sheet of paper with number on it and moving around the backyard at the office) and started our attempts at creating a working prototype by using the videos for testing the algorithms. Here are some of the things we thought that would be useful:
+* motion detection and tracking by background-foreground subtraction
+* text/letter/digit recognition for identifying the player by the shirt number
+* functions for creating transformation matrixes for converting perspective view coordinates to top-view 2D coordinates of the field.
 
-### Ден четвърти
+We also identified some cases and potential objects on the field which would not be addressed at this phase:
+* tracking/detecting a player behind another one - in future phases of the project, we are planning on using more than one camera for shooting at different angles to overcome these issues. The presence of two or more cameras would require, collecting and processing the video information from all sources at a single computer and synchronizing it. By doing this, we would also be able to obtain more precise coordinates by calculating average position from all the sources.
+* referee identification and tracking
+* ball detection and tracking
 
-Разполагахме с някакъв background и working examples по OpenCV, заснехме няколко sample видеа отзад в #лятнатаГрадина (Изтегли видео от демото тук: https://drive.google.com/file/d/0Bw_RSgw8AS5IUWV0QTRxdXBmUFE/view?usp=sharing ) и започнахме да подготвяме working prototype за идеята върху тях. 
-Набелязахме нещата, които можем да използваме:
-- motion detection алгоритми - за да знаем къде има нещо по игрището
-- text/letter recognition или object recognition за разпознаване на въпросното от по-горе "нещо" кой играч всъщност е
-- Няколко метода предлагани от библиотеката за изготвяне на translation matrix за коригиране на изкривяванията на камерата и преобразуване на координатите на играчите от видео образа към виртуалното 2D игрище.
+### Day 5
 
-Набелязахме и доста corner cases, който _няма_ да предвиждаме в demo-то за Sprint 1: 
-Multi user - след разпознаване на играчите трябва да ги следим и да "знаем" играч къде се намира. Съответно когато играч е пред/зад друг играч трябва да се разпознаят няколко отделни обекта. Един възможен начин за справяне с тази ситуация е наличие на няколко камери - взаимодействие/синхронизация между тях за разпознаване на максимален брой обекти в сцената, както и коригиране (average) на position данните от едната камера с данните от другата. Възможно е и да се разпишат алгоритми за намиране на "last known position" на играчите, която да се използва за estimate-ване на текущата позиция на играч в кадрите, където камерата не го вижда, спрямо последните карди в които го е виждала, и/или бъдещи кадри, в които ще го види. Разпознаване на топки, съдии и други обекти по полето, които не са ни важни.
+The last day of this sprint. At the start of the day, most of the components of our prototype were almost ready. Only the player recognition/identification was still a problem. It turned out that the letter/digit recognition algorithms required a lot more samples (different angles, proportions) than we expected for teaching the system how to correctly recognise them. We also tried out [FLANN](http://docs.opencv.org/2.4/doc/tutorials/features2d/feature_flann_matcher/feature_flann_matcher.html) based tracking algorithms, but the results were even more inaccurate, especially when there was too many details in the video. It seems that we would need a lot more research on the topic for other ways of doing the identification (or at least more time to improve the results with the current ones), so this functionality is missing in the current prototype/demo. As for the other topics:
+* we fine-tuned the logic for getting the player position coordinates by creating an algorithm for calculating running average of the last 10 positions (this is usually from the last 10 frames of the video)
+* false-positive object detections - by ignoring objects which are too small (area) or outside the borders of the field
+* drawing a rectangle around the moving player/object
+* interactions to provide the initial 4 points with mouse clicks (instead of hard-coding the field's coorinates in the code)
 
-### Ден пети
 
-Последния ден от спринта. Моментът на истината. В началото на деня повечето компоненти от работещото демо (ограничено за един играч в полето #foreveralone и една снимаща го камера (без кожен диван)) бяха почти работещи. В по-реалните тестове открихме, че letter recognition-а не работи добре ако нямаме адски много samples, с които да обучим системата да намира цифри (разбирайте цифрата 9 снимана под всякакви възможни ъгли), изпробвахме object tracking предлаган от библиотеката, но там резултатите бяха неточни и още по-неточни ако има много детайли в картината. На този етап имаше нужда от повече research за други начини (или доусъвършенстване на тези) за разпознаване на играчите в игрището и във финалното демо тази функционалност не е представена. Доусъвършенствахме тук-там алгоритмите - running average на координатите и error correction за false-positive detection, поизпипахме визуално демото (да чертае позицията на играча, да не забиваме координатите на игрището в кода, а да ги посочваме с мишката и т.н.) и по план искахме да изготвим това обобщение + презентация.
+### Sprint-1 Summary
 
-### Обобщение от Спринт 1
-В крайна сметка успяхме да докараме работещ прототип, включващ следене и heatmap на играч върху игрището. Чрез motion tracking намерихме обекта, транслирахме координатите му върху игралното поле и изчертахме движенията му. Прецизността на намиране на точно местоположение в демо видеото, което използвахме, беше в рамките на сантиметри. За разпознаване на обекта успяхме да си извадим няколко извода - вграденият object detection не работи достатъчно добре дори и след малко донастройване, разпознаването на цифри в полето има по-голям потенциал, но изисква наличие на много sample снимки (на цифрите), които да обучат системата за да разпознава добре числата.
+At the end of the day, we had a working prototype which was capable of tracking the player's movement and creating a 2D view heatmap. This was done by using motion tracking algorithms (generally background-foreground subtractions), getting the base of the object as a position and traslating the perspective view coordinates to 2D one, thus creating a heatmap. After doing some real-world on-site measurements by using some by-standing objects as reference, calculations showed that the accuracy of the coordinates was correct up to a few centimeters. As for the player identification - the library's feature matching capabilities that we tried were not doing a good enough job for this use even after a lot of fine-tuning. So the letter/digit recognition algorithms definitely have a better potential, although they require a lot of samples (pictures) of the digits in order to teach the system to accurately recognise them.
 
-### Ами сега?
-Непременно първата стъпка в следващия спринт трябва да бъде идентифициране на разпознатия обект - кой играч е, от кой отбор е и т.н., като тук има доста challenge и все още неизследвани опции. Процеса по разпознаване на играчите е своя собствена наука и евентуален следващ спринт би валидирал посоки, в които може да продължи той. След постигане на резултати там следва работа по различните алгоритми - разпознаване на повече от един играч в полето и предвиждане на местоположението на играчите когато то не е налично, обработка и синхронизация на кадрите от няколко камери, разпознаване на топка, голи фенове и други обекти по игрището и изготвяне на алгоритми по разпознаване на различните интеракции между играчите - пасове, удъри, хвърляния, мятания, както и разпознаване на събития по терена - голове, молове, тъчове, мъчове, ъглови удъри, фалове и други.
+### What next?
 
-Вратата тук остава широко отворена за спринт 2, с доста неизследвани територии и challenges.
+Definately the first step for the next phase (Sprint-2) should be the successful player identification/recognition - who's the player and which team he's on - that would be a good challenge with a lot of options still to be tried out. Once we achieve this goal, that would open the door for creating logic for the following steps:
+* tracking more than one player
+* predict a player's position, even if he's not recognisable from the current view/camera
+* sync and proccess frames from multiple video sources
+* ball detection and tracking
+* referee and other non-player detection (medical staff, a fan running around :) ..., etc.)
+* algorithms for recognising various event or player interactions (passes, shots, fouls, goals, throw-ins, goal kicks, corners, etc.)
+
+So the door is open for Sprint-2, with lots of new challenges to take on and territories to explore!
+
 
 # Contributions
 
-Вашият код е важен за нас! ;) 
+We accept all kind of contributions that you guys make and we'll love you for them! <3
 
-Ако намерите проблем, имате предложение или желаете да дискутирате нещо с нас - освен на живо (so last century) можете да се включите и с Issue /TODO: insert link here/ или Pull request.
+If you find any problems, have any suggestions or want to discuss something you can either open an issue /TODO: insert link here/ or make a pull request with code changes instead.
 
-## Успех!
+If you want to contribute, but you're not sure where to start you can always take a look at the issues /TODO: insert link here/ we have open and pick up with some of them.
+
+Try to follow our conventions for naming issues, branches and existing code structure.
+
+## Happy coding!
