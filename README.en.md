@@ -111,7 +111,9 @@ So the door is open for Sprint-2, with lots of new challenges to take on and ter
 # Contributions
 
 We accept all kind of contributions that you guys make and we'll love you for them! <3
+
 If you find any problems, have any suggestions or want to discuss something you can either open an issue /TODO: insert link here/ or make a pull request with code changes instead.
+
 If you want to contribute, but you're not sure where to start you can always take a look at the issues /TODO: insert link here/ we have open and pick up with some of them.
 
-Happy coding!
+## Happy coding!
