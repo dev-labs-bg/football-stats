@@ -2,6 +2,8 @@
 
 Football stats is a system which has the purpose of helping football match analyses. The final goal of the project is to have the capability of ball and players' position analysis, creating heatmaps and statistics of different actions or situations.
 
+Note: [Readme in BG | Прочети.ме на български](/README.bg.md)
+
 # How do I start the demo?
 
 1. Install Python and PIP (if not already included)
