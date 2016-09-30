@@ -15,6 +15,7 @@ from lib.polygon import drawQuadrilateral
 from lib.user_interaction import getPerpectiveCoordinates
 from lib.fgbg_calculations import getThresholdedFrame
 from lib.heatmap import Heatmap
+from lib.coordinate_transform import windowToFieldCoordinates
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -121,7 +122,7 @@ while True:
 
 	def leftClickDebug(event, x, y, flags, param):
 		if event == cv2.EVENT_LBUTTONDOWN:
-			resultCoord = windowToFieldCoordinates(x, y, coords, resultWidth, resultHeight)
+			resultCoord = windowToFieldCoordinates((x, y), coords, resultWidth, resultHeight)
 			print "Coordinates to real coordinates", resultCoord
 	# UNCOMMENT IF YOU WANT TO DEBUG
 	# cv2.setMouseCallback('frame', leftClickDebug)
