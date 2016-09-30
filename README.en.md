@@ -116,4 +116,6 @@ If you find any problems, have any suggestions or want to discuss something you 
 
 If you want to contribute, but you're not sure where to start you can always take a look at the issues /TODO: insert link here/ we have open and pick up with some of them.
 
+Try to follow our conventions for naming issues, branches and existing code structure.
+
 ## Happy coding!
