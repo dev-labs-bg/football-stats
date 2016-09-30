@@ -1,5 +1,4 @@
 import cv2
-from lib.coordinate_transform import windowToFieldCoordinates
 
 def getPerpectiveCoordinates(image, windowName, mouse):
 	"""Get coordinates of 4 points by providing them with mouse clicks.
