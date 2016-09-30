@@ -1,9 +1,19 @@
 import cv2
 from lib.coordinate_transform import windowToFieldCoordinates
 
-# get coordinates of 4 points by providing them with mouse clicks
-def getPerpectiveCoordinates(frame, windowName, mouse):
-	cv2.imshow(windowName, frame)	
+def getPerpectiveCoordinates(image, windowName, mouse):
+	"""Get coordinates of 4 points by providing them with mouse clicks.
+	
+	Args:
+		image: Image.
+		windowName (string): Name of the window showing the image.
+		mouse: Mouse object.
+
+	Returns:
+		list: An array of 4 items holding coordinate tuples (x,y).
+
+	"""
+	cv2.imshow(windowName, image)	
 	cv2.setMouseCallback(windowName, mouse.leftClick)
 	
 	i = 0
@@ -22,15 +32,3 @@ def getPerpectiveCoordinates(frame, windowName, mouse):
 		coords.append((mouse.x, mouse.y))
 
 	return coords
-
-# debug coordinates by moving the mouse
-def leftClickDebug(event, x, y, flags, param, coords, resultWidth, resultHeight):
-	if event == cv2.EVENT_LBUTTONDOWN:
-		(x1, y1) = coords[0]
-		(x2, y2) = coords[1]
-		(x3, y3) = coords[2]
-		(x4, y4) = coords[3]
-
-		resultCoord = windowToFieldCoordinates(x, y, x1, y1, x2, y2, x3, y3, x4, y4, resultWidth, resultHeight)
-	
-		print "Coordinates to real coordinates", resultCoord

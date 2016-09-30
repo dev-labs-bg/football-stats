@@ -10,12 +10,9 @@ import time
 import cv2
 import numpy as np
 from lib.mouse import Mouse
-from lib.coordinate_transform import windowToFieldCoordinates
-from lib.average_coordinates import getRunningAverageCoordinates
 from lib.video_source import getVideoSource
 from lib.polygon import drawQuadrilateral
 from lib.user_interaction import getPerpectiveCoordinates
-from lib.user_interaction import leftClickDebug
 from lib.fgbg_calculations import getThresholdedFrame
 from lib.heatmap import Heatmap
 
@@ -54,7 +51,7 @@ field = np.zeros((resultHeight + padding*2,resultWidth + padding*2,3), np.uint8)
 (xb4, yb4) = (padding, padding + resultHeight)
 
 # draw the 2D top-view field
-drawQuadrilateral(field, xb1, yb1, xb2, yb2, xb3, yb3, xb4, yb4, 0, 255, 0, 2)
+drawQuadrilateral(field, [(xb1, yb1), (xb2, yb2), (xb3, yb3), (xb4, yb4)], 0, 255, 0, 2)
 
 # crea heatmap object
 heatmap = Heatmap(field, resultWidth, resultHeight)
@@ -79,14 +76,8 @@ while True:
 	if frameCount == 1:
 		coords = getPerpectiveCoordinates(frame, 'frame', mouse)
 
-	# perspective coordinates
-	(xa1, ya1) = coords[0]
-	(xa2, ya2) = coords[1]
-	(xa3, ya3) = coords[2]
-	(xa4, ya4) = coords[3]
-
 	# draw perspective field
-	drawQuadrilateral(frame, xa1, ya1, xa2, ya2, xa3, ya3, xa4, ya4, 0, 255, 0, 2)
+	drawQuadrilateral(frame, coords, 0, 255, 0, 2)
 
 	# apply color subtractions and calculations to get a black and white frame
 	# making it possible for computer to recognize clear contours
@@ -107,7 +98,7 @@ while True:
 		basePoint = ((x + (w/2)), (y + h))
 
 		# get the top-view relative coordinates
-		(xbRel, ybRel) = heatmap.getPosRelativeCoordinates(basePoint, xa1, ya1, xa2, ya2, xa3, ya3, xa4, ya4)
+		(xbRel, ybRel) = heatmap.getPosRelativeCoordinates(basePoint, coords)
 
 		if xbRel < 0 or xbRel > resultWidth or ybRel < 0 or ybRel > resultHeight:
 			print "Skipped a contour, not a cool contour"
@@ -121,14 +112,19 @@ while True:
 
 			# draw overlayed opacity circle every 5 frames
 			if frameCount % 5 == 0:
-				heatmap.drawOpacityCircle(xb, yb, 255, 0, 0, 0, 15)
+				heatmap.drawOpacityCircle((xb, yb), 255, 0, 0, 0, 15)
 
 	# display all windows
 	cv2.imshow('frame',frame)
-	# UNCOMMENT IF YOU WANT TO DEBUG
-	# cv2.setMouseCallback('frame', leftClickDebug)
 	cv2.imshow('thresh',thresh)
 	cv2.imshow('field',field)
+
+	def leftClickDebug(event, x, y, flags, param):
+		if event == cv2.EVENT_LBUTTONDOWN:
+			resultCoord = windowToFieldCoordinates(x, y, coords, resultWidth, resultHeight)
+			print "Coordinates to real coordinates", resultCoord
+	# UNCOMMENT IF YOU WANT TO DEBUG
+	# cv2.setMouseCallback('frame', leftClickDebug)
 
 	# wait for key press
 	key = cv2.waitKey(1) & 0xFF

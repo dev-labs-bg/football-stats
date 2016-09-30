@@ -8,16 +8,35 @@ class Heatmap:
 		self.fieldWidth = fieldWidth
 		self.fieldHeight = fieldHeight
 
-	# translate the basepoint's perspective coordinates to top-view ones (relative to the fields' top-left point) 
-	def getPosRelativeCoordinates(self, basePoint, x1, y1, x2, y2, x3, y3, x4, y4):
-		resultCoord = windowToFieldCoordinates(basePoint, x1, y1, x2, y2, x3, y3, x4, y4, self.fieldWidth, self.fieldHeight)
+	def getPosRelativeCoordinates(self, originalPoint, perspectiveCoords):
+		"""Get 2D top-view coordinates (relative to the fields' top-left point) by
+			translating the originalPoint's perspective coordinates.
+
+		Args:
+			originalPoint (tuple): Current position coordinates in the perspective view.
+			perspectiveCoords (list): Perspective field's 4 points' coordinates.
+
+		Returns:
+			tuple: Coordinates (x,y).
+
+		"""
+		resultCoord = windowToFieldCoordinates(originalPoint, perspectiveCoords, self.fieldWidth, self.fieldHeight)
 		x = int(resultCoord[0])
 		y = int(resultCoord[1])
 
 		return (x, y)
 
-	# get the absolute top-view coordinates for the position
 	def getPosAbsoluteCoordinates(self, posRelative, fieldTopLeftPoint):
+		"""Get 2D top-view's absolute coordinates.
+
+		Args:
+			posRelative (tuple): The position's 2D top-view coordinates (relative to the fields' top-left point) .
+			fieldTopLeftPoint (tuple): The 2D top-view field's top-left point coordinates.
+
+		Returns:
+			tuple: Coordinates (x,y).
+
+		"""
 		(x1, y1) = fieldTopLeftPoint
 		posRelativeAvg = getRunningAverageCoordinates(posRelative)
 		x = x1 + int(posRelativeAvg[0])
@@ -25,9 +44,19 @@ class Heatmap:
 
 		return (x, y)
 
-	# draw overlayed opacity circle
-	def drawOpacityCircle(self, x, y, colorR, colorG, colorB, radius, thickness):
+	def drawOpacityCircle(self, position, colorR, colorG, colorB, radius, thickness):
+		"""Draw an overlayed opacity circle.
+
+		Args:
+			position (tuple): Coordinates for the center of the circle.
+			colorR (int): Red color.
+			colorG (int): Green color.
+			colorB (int): Blue color.
+			radius (int): Radius of the circle.
+			thickness (int): Thickness of the circle's line/border.
+
+		"""
 		overlay = self.frame.copy()
-		cv2.circle(overlay, (x, y), radius, (colorB, colorG, colorR), thickness)
+		cv2.circle(overlay, position, radius, (colorB, colorG, colorR), thickness)
 		alpha = 0.25
 		cv2.addWeighted(overlay, alpha, self.frame, 1 - alpha, 0, self.frame)
