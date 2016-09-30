@@ -1,8 +1,18 @@
 import cv2
 
-# draw a quadrilateral in a given window by providind 4 points' coordinates, line color and thickness
-def drawQuadrilateral(frame, x1, y1, x2, y2, x3, y3, x4, y4, colorR, colorG, colorB, lineThickness):
-	cv2.line(frame, (x1, y1), (x2, y2), (colorB, colorG, colorR), lineThickness)
-	cv2.line(frame, (x2, y2), (x3, y3), (colorB, colorG, colorR), lineThickness)
-	cv2.line(frame, (x3, y3), (x4, y4), (colorB, colorG, colorR), lineThickness)
-	cv2.line(frame, (x4, y4), (x1, y1), (colorB, colorG, colorR), lineThickness)
+def drawQuadrilateral(image, pointsCoords, colorR, colorG, colorB, lineThickness):
+	"""Draw a quadrilateral in an image.
+
+	Args:
+			image: Image.
+			pointsCoords (list): The polygon's points coordinates.
+			colorR (int): Red color.
+			colorG (int): Green color.
+			colorB (int): Blue color.
+			lineThickness (int): Thickness of the lines.
+
+	"""
+	cv2.line(image, pointsCoords[0], pointsCoords[1], (colorB, colorG, colorR), lineThickness)
+	cv2.line(image, pointsCoords[1], pointsCoords[2], (colorB, colorG, colorR), lineThickness)
+	cv2.line(image, pointsCoords[2], pointsCoords[3], (colorB, colorG, colorR), lineThickness)
+	cv2.line(image, pointsCoords[3], pointsCoords[0], (colorB, colorG, colorR), lineThickness)
