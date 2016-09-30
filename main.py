@@ -1,6 +1,6 @@
-# USAGE
-# python motion_detector.py
-# python motion_detector.py --video 'video_file_name'
+# How to use it:
+# python motion_detector.py 							(takes camera as video source)
+# python motion_detector.py --video 'video_file_name'	(takes file as video source)
 
 # import the necessary packages
 import argparse
