@@ -1,4 +1,5 @@
 import cv2
+import time
 
 # get the video source based on arguments provided
 def getVideoSource(args):
